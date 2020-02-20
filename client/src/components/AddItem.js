@@ -1,24 +1,15 @@
 import React, { useState } from "react";
-import axios from "axios";
 
-const AddItem = ({ fetchList, listState }) => {
+const AddItem = ({ addItem }) => {
   const [itemNameState, setItemNameState] = useState("");
   const [categoryState, setCategoryState] = useState("");
 
   const handleAddItem = async e => {
     e.preventDefault();
-    await axios
-      .post("/api/additem", {
-        itemName: itemNameState,
-        itemCategory: categoryState,
-        listId: listState._id
-      })
-      .then(() => {
-        fetchList();
-      });
+    addItem(itemNameState, categoryState);
 
-      setItemNameState("");
-      setCategoryState("");
+    setItemNameState("");
+    setCategoryState("");
   };
 
   const onItemNameChange = e => {

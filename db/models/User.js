@@ -10,8 +10,6 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   emails: [String],
-  subscribedLists: [{type: Schema.Types.ObjectId, ref: "List"}],
-  managedLists: [{type: Schema.Types.ObjectId, ref: "List"}]
 });
 
 mongoose.model("users", userSchema);

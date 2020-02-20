@@ -2,74 +2,74 @@ const requireLogin = require("../middlewares/requireLogin");
 const mongoose = require("mongoose");
 const List = mongoose.model("lists");
 const User = mongoose.model("users");
+const { sendShareMail } = require("../services/email/mailer");
 
 module.exports = app => {
-  //GET// getuserslistsoverview:
-  app.get("/api/getuserslistsoverview", requireLogin, async (req, res) => {
-    const subscribedListsIds = req.user.subscribedLists;
-    let listsNamesAndIds = [];
-
+  //GET// getSubscribedListsNames
+  app.get("/api/getSubscribedListsNames", requireLogin, async (req, res) => {
     try {
-      if (subscribedListsIds) {
-        for (let listId of subscribedListsIds) {
-          const { listName } = await List.findById(listId, {
-            listName: 1,
-            _id: 0
-          });
-
-          listsNamesAndIds.push({ listId, listName });
-        }
-      }
+      const lists = await List.find(
+        { "subscribedUsers.user": req.user._id },
+        "listName"
+      );
+      res.status(200).send({ lists });
     } catch (error) {
-      console.log("error at getuserslistsoverview: ", error);
-      res.status(400).send({ error: "unable to find user lists" });
+      console.log("error in getSubscribedListsNames: ", error);
+      res.status(400).send({ error: "unable to getSubscribedListsNames" });
     }
-    res.status(200).send(listsNamesAndIds);
   });
 
   //POST// createList
   app.post("/api/createList", requireLogin, async (req, res) => {
     try {
       const newList = await new List({
-        listName: req.body.listName,
-        managers: [req.user._id],
-        subscribedUsers: [req.user._id]
+        subscribedUsers: [{ user: req.user, manager: true }],
+        listName: req.body.newListName
       });
-      req.user.managedLists.push(newList.id)
-      req.user.subscribedLists.push(newList._id);
-
-      await req.user.save();
       await newList.save();
       res.status(201).send(newList);
     } catch (error) {
-      res.status(400).send({ error: "unable to create new list" });
+      console.log("error in createList: ", error);
+      res.status(400).send({ error: "unable to createList" });
     }
   });
 
-  //GET// getListData
-  app.get("/api/getListDate/:listId", requireLogin, async (req, res) => {
+  //getListById
+  app.get("/api/getListById/:id", requireLogin, async (req, res) => {
     try {
-      const listData = await List.findById(req.params.listId);
-      res.status(200).send(listData);
+      const list = await List.findById(req.params.id);
+
+      let isRequestedUserSubscribedToList = false;
+      for (let subscribedUser of list.subscribedUsers) {
+        if (subscribedUser.user.toString() == req.user._id) {
+          isRequestedUserSubscribedToList = true;
+        }
+      }
+      if (isRequestedUserSubscribedToList) {
+        return res.status(200).send(list);
+      }
+
+      return res.status(401).send({ error: "unsubscribedUser" });
     } catch (error) {
-      console.log("error in getListDate: " + error);
-      res.status(400).send({ error: "unable to find list data" });
+      console.log("error in getListById: ", error);
+      res.status(400).send({ error: "unable to getListById" });
     }
   });
 
   //POST// addListItem
   app.post("/api/additem", requireLogin, async (req, res) => {
     const listId = req.body.listId;
-    const newItem = {
+    const item = {
+      _id: new mongoose.Types.ObjectId(),
       itemName: req.body.itemName,
       category: req.body.itemCategory,
       addedBy: req.user._id
     };
     try {
       await List.findByIdAndUpdate(listId, {
-        $push: { items: newItem }
+        $push: { items: item }
       });
-      res.status(201).send({ message: "created" });
+      res.status(201).send(item);
     } catch (error) {
       console.log("error in addItem: ", error);
       res.status(400).send({ error: "unable to add item" });
@@ -93,7 +93,6 @@ module.exports = app => {
       }
     }
   );
-
   //PUT// checkItem
   app.put(
     "/api/checklistitem/:listId/:itemId/:checked",
@@ -113,26 +112,132 @@ module.exports = app => {
     }
   );
 
-  //POST// getusernamebyid
-  app.post("/api/getsubscribedusers", requireLogin, async (req, res) => {
-    const { userIds } = req.body;
-    let subscribedUsers = [];
-    try {
-      for (let userId of userIds) {
-        const result = await User.findById(userId);
-        subscribedUsers.push(result);
-      }
-      res.status(200).send({ subscribedUsers: subscribedUsers });
-    } catch (error) {
-      console.log("error in getuserbyid, unable to find user", error);
-      res
-        .status(400)
-        .send({ error: "error in getuserbyid, unable to find user" });
+  //POST// shareListViaEmail
+  app.post("/api/shareListViaEmail", requireLogin, (req, res) => {
+    const fullNameFrom = req.user.fullName;
+    const emailFrom = req.user.emails[0];
+    const { emailTo, listLink } = req.body;
+    if (fullNameFrom && emailFrom && emailTo && listLink) {
+      sendShareMail(fullNameFrom, listLink, emailFrom, emailTo);
+      res.status(200).send({ msg: "email sent!" });
+    } else {
+      res.status(400).send({ error: "unable to send email" });
     }
   });
 
-  //DELETE// removeList
-  
+  // GET// getSubscribedUsers
+  app.get("/api/getSubscribedUsers/:listId", requireLogin, async (req, res) => {
+    try {
+      const subscribedUsers = await List.findById(
+        req.params.listId,
+        "subscribedUsers"
+      ).populate("subscribedUsers.user");
+      res.status(200).send(subscribedUsers);
+    } catch (error) {
+      console.log("error in getSubscribedUsers: " + error);
+      res.status(400).send({ error: "unable to get Subscribed Users" });
+    }
+  });
 
-  //DELETE// removeUserFromList
+  //POST// unsubscribeUserFromList
+  app.post("/api/unsubscribeUserFromList", requireLogin, (req, res) => {
+    const { userIdToUnsubscribe, listId } = req.body;
+    List.findByIdAndUpdate(listId, {
+      $pull: { subscribedUsers: { user: { _id: userIdToUnsubscribe } } }
+    })
+      .then(() => {
+        res
+          .status(200)
+          .send({ msg: "unsubscribed user from list successfully" });
+      })
+      .catch(error => {
+        console.log("error in unsubscribeUserFromList: " + error);
+        res.status(400).send({ error: "unable to unsubscribe User From List" });
+      });
+  });
+
+  //POST// removeList
+  app.post("/api/deleteList", requireLogin, (req, res) => {
+    List.findByIdAndRemove(req.body.listIdToDelete)
+      .then(() => {
+        res.status(200).send({ msg: "list removed" });
+      })
+      .catch(error => {
+        console.log("error in removeList: ", error);
+        res.status(400).send({ error: "unable to delete list" });
+      });
+  });
+
+  //POST// subscribeUserToList
+  app.post("/api/subscribeUserToList", requireLogin, async (req, res) => {
+    const { listId } = req.body;
+    const userId = req.user._id;
+    let isAlreadySubscribed = false;
+
+    try {
+      const list = await List.findById(listId);
+      list.subscribedUsers.forEach(subscribedUser => {
+        if (subscribedUser.user.toString() === userId.toString()) {
+          return (isAlreadySubscribed = true);
+        }
+      });
+      if (isAlreadySubscribed) {
+        return res.status(400).send({ error: "already subscribed" });
+      }
+
+      if (!isAlreadySubscribed) {
+        list.subscribedUsers.push({
+          manager: false,
+          _id: new mongoose.Types.ObjectId(),
+          user: req.user._id
+        });
+        await list.save();
+        res.status(200).send({ msg: "user subscribed" });
+      }
+    } catch (error) {
+      console.log("error in subscribeUserToList: ", error);
+      res.status(400).send("unable to subscribe User To List");
+    }
+  });
+
+  //POST// makeUserManager
+  app.post("/api/makeUserManager", requireLogin, async (req, res) => {
+    const { listId, userId } = req.body;
+    try {
+      const list = await List.findById(listId);
+      list.subscribedUsers.forEach(subscribedUser => {
+        if (subscribedUser.user === userId) {
+          subscribedUser.manager = true;
+        }
+      });
+      await list.save();
+      res.status(200).send({ msg: "user is now manager" });
+    } catch (error) {
+      console.log("error in makeUserManager: ", error);
+      res.send({ error: "unable to make user manager" });
+    }
+  });
+
+  //GET //getListNameById
+  app.get("/api/getListNameById/:listId", (req, res) => {
+    List.findById(req.params.listId, "listName")
+      .then(result => {
+        res.status(200).send(result);
+      })
+      .catch(error => {
+        console.log("error in getListNameById: ", error);
+        res.status(400).send({ error: "unable to get list name by id" });
+      });
+  });
+  //GET // getUserNameById
+  app.get("/api/getUserFullNameById/:userId", (req, res) => {
+    User.findById(req.params.userId, "fullName")
+      .then(result => {
+        res.status(200).send(result);
+      })
+      .catch(error => {
+        console.log("error in getUserFullNameById: ", error);
+        res.status(400).send({ error: "unable to get user full name by id" });
+      });
+  });
 };

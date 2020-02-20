@@ -1,62 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import AddItem from "./AddItem";
-import ListItem from "./ListItem";
-import { Link } from "react-router-dom";
-import ListSettingsAndShare from "./ListSettingsAndShare"
 
-const ListView = ({ match }) => {
+import { Link } from "react-router-dom";
+import ListSettingsAndShare from "./ListSettingsAndShare";
+import ListItemsCollection from "./ListItemsCollection";
+import ListError from "./ListError";
+
+const ListView = ({ match, history }) => {
+  const isCancelled = useRef(false);
   const [listState, setListState] = useState("");
-  const [showSettingsState, setShowSettingsState] = useState(false)
+  const [showSettingsState, setShowSettingsState] = useState(false);
+  const [errorState, setErrorState] = useState("");
+  const listId = match.params.id;
 
   useEffect(() => {
-      const fetchListData = async () => {
-        const result = await axios.get(`/api/getListDate/${match.params.id}`)
-        setListState(result.data)
-      }
-      fetchListData()
-  }, [])
-
-
-  const fetchList = async () => {
-    axios.get(`/api/getListDate/${match.params.id}`).then(response => {
-      setListState(response.data);
-    });
-  };
+    const fetchList = () => {
+      axios
+        .get(`/api/getListById/${listId}`)
+        .then(response => {
+          if (!isCancelled.current) {
+            setListState(response.data);
+          }
+        })
+        .catch(() => {
+          setErrorState(
+            "sorry, but you are not subscribed to this list, so you can't see it's content. please ask the list's manager to send you an invitation."
+          );
+        });
+    };
+    fetchList();
+    return () => {
+      isCancelled.current = true;
+    };
+  }, [listState, listId]);
 
   const toggleShowShare = () => {
-    showSettingsState ? setShowSettingsState(false) : setShowSettingsState(true)
-  }
-
-  const renderItems = () => {
-    const { items } = listState;
-    let ListItemComponents = [];
-    if (items) {
-      for (let item of items) {
-        ListItemComponents.push(
-          <ListItem
-            key={item._id}
-            listId={listState._id}
-            fetchList={fetchList}
-            itemData={item}
-          />
-        );
-      }
-    }
-    return ListItemComponents;
+    showSettingsState
+      ? setShowSettingsState(false)
+      : setShowSettingsState(true);
   };
 
   return (
     <div>
       <h3>{listState.listName}</h3>
       <button onClick={toggleShowShare}>Settings and Share</button>
-      {showSettingsState && <ListSettingsAndShare toggleShowShare={toggleShowShare} list={listState}/>}
-      <AddItem fetchList={fetchList} listState={listState} />
+      {showSettingsState && (
+        <ListSettingsAndShare
+          toggleShowShare={toggleShowShare}
+          history={history}
+          list={listState}
+        />
+      )}
       <Link to="/">
         <button>back Home</button>
       </Link>
 
-      {listState && renderItems()}
+      {listState && (
+        <ListItemsCollection
+          listState={listState}
+          setListState={setListState}
+        />
+      )}
+      {errorState && <ListError error={errorState} setError={setErrorState} />}
     </div>
   );
 };

@@ -1,0 +1,25 @@
+const sgMail = require("@sendgrid/mail");
+const keys = require("../../config/keys");
+const shareListEmailTemplate = require("./shareListEmailTemplate");
+
+sgMail.setApiKey(keys.sendGridKey);
+
+const sendShareMail = (fullNameFrom, listLink, emailFrom, emailTo) => {
+  const msg = {
+    to: emailTo,
+    // from: "no-replay@share-list.com",
+    from: emailFrom,
+    subject: "join the list",
+    html: shareListEmailTemplate(fullNameFrom, listLink)
+  };
+
+  try {
+    sgMail.send(msg);
+    return msg;
+  } catch (error) {
+    console.log("error sending mail", error);
+    return error;
+  }
+};
+
+module.exports = { sendShareMail };

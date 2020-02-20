@@ -8,9 +8,11 @@ mongoose
   .connect(keys.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    'useFindAndModify': false
+    useFindAndModify: false
   })
   .then(() => {
     console.log("Connected to MongoDB!");
   })
   .catch(err => console.log("Error cannot connect to mongoDB: " + err));
+
+

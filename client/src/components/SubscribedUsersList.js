@@ -1,19 +1,70 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import SubscribedUser from "./SubscribedUser";
 import { authContext } from "../context/auth";
+import axios from "axios";
 
-
-const SubscribedUsersList = ({ subscribedUsersState, listManagers}) => {
+const SubscribedUsersList = ({
+  subscribedUsersState,
+  setSubscribedUsersState,
+  isCurrentUserManager,
+  listId
+}) => {
   const { currentUser } = useContext(authContext);
+
+  const removeUser = userId => {
+    axios
+      .post("/api/unsubscribeUserFromList", {
+        userIdToUnsubscribe: userId,
+        listId
+      })
+      .then(() => {
+        const tempSubscribedUsers = subscribedUsersState.filter(
+          subscribedUser => {
+            return subscribedUser.user._id === userId;
+          }
+        );
+        setSubscribedUsersState(tempSubscribedUsers);
+      })
+      .catch(error => {
+        console.log("error in removeUser: ", error);
+        window.alert("unable to remove user");
+      });
+  };
+
+  const makeUserManager = userId => {
+    axios
+      .post("/api/makeUserManager", { userId, listId })
+      .then(() => {
+        const tempSubscribedUsers = subscribedUsersState;
+        tempSubscribedUsers.forEach(subscribedUser => {
+          if (SubscribedUser.user._id === userId) {
+            SubscribedUser.manager = true;
+          }
+        });
+        setSubscribedUsersState(tempSubscribedUsers);
+      })
+      .catch(error => {
+        console.log("error in makeUserManager: ", error);
+        window.alert("unable make user a manager");
+      });
+  };
 
   const renderSubscribedUsers = () => {
     let subscribedUsersComponent = [];
     for (let subscribedUserObj of subscribedUsersState) {
-      const isManager = listManagers.includes(subscribedUserObj._id)
-      const isMe = currentUser._id === subscribedUserObj._id;
+      const isManager = subscribedUserObj.manager;
+      const isMe = currentUser._id === subscribedUserObj.user._id;
 
       subscribedUsersComponent.push(
-        <SubscribedUser key={subscribedUserObj._id} subscribedUser={subscribedUserObj} isManager={isManager} isMe={isMe}/>
+        <SubscribedUser
+          key={subscribedUserObj.user._id}
+          subscribedUser={subscribedUserObj.user}
+          isManager={isManager}
+          isMe={isMe}
+          isCurrentUserManager={isCurrentUserManager}
+          removeUser={removeUser}
+          makeUserManager={makeUserManager}
+        />
       );
     }
     return subscribedUsersComponent;

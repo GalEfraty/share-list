@@ -1,34 +1,61 @@
-import React, { useContext, useState, useEffect } from "react";
-import axios from "axios"
+import React, { useContext, useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { authContext } from "../context/auth";
-import SubscribedUsersList from "./SubscribedUsersList"
+import SubscribedUsersList from "./SubscribedUsersList";
 
-const ListSettingsAndShare = ({ toggleShowShare, list }) => {
+const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
   const { currentUser } = useContext(authContext);
+  const isCancelled = useRef(false);
   const [emailState, setEmailState] = useState("");
-  const [showUsersState, setShowUsersState] = useState("")
-  const [subscribedUsersState, setSubscribedUsersState] = useState("")
-  const listLink = `https://gal-share-list.herokuapp.com/list/${list._id}`;
+  const [showUsersState, setShowUsersState] = useState("");
+  const [subscribedUsersState, setSubscribedUsersState] = useState("");
+  const [isCurrentUserManagerState, setIsCurrentUserManagerState] = useState(
+    false
+  );
+  const listLink = `${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName}/${list._id}/${list.listName}`;
 
   useEffect(() => {
-    const fetchSubscribedUsersData = async () => {
-      try {
-        const {data: {subscribedUsers}} = await axios.post("/api/getsubscribedusers", {userIds: list.subscribedUsers})
-        setSubscribedUsersState(subscribedUsers)
-      } catch (error) {
-        console.log("couldnt fetch subscribed users", error)
-        setSubscribedUsersState("")
-      }
-    }
-    fetchSubscribedUsersData()
-  },[showUsersState])
+    const fetchSubscribedUsersData = () => {
+      axios
+        .get(`/api/getsubscribedusers/${list._id}`)
+        .then(response => {
+          if (!isCancelled.current) {
+            setSubscribedUsersState(response.data.subscribedUsers);
+          }
+          response.data.subscribedUsers.forEach(subscribedUser => {
+            if (
+              subscribedUser.manager &&
+              subscribedUser.user._id === currentUser._id
+            ) {
+              setIsCurrentUserManagerState(true);
+            }
+          });
+        })
+        .catch(error => {
+          console.log("couldnt fetch subscribed users", error);
+          setSubscribedUsersState("");
+          window.alert("error in fetchSubscribedUsersData");
+        });
+    };
+    fetchSubscribedUsersData();
+
+    return () => {
+      isCancelled.current = true;
+    };
+  }, [showUsersState, list, currentUser]);
 
   const handleShareLink = e => {
     e.preventDefault();
-    console.log(
-      `${currentUser.fullName} send a mail to ${emailState} with list link: ${listLink}`
-    );
-    toggleShowShare();
+    axios
+      .post("/api/shareListViaEmail", { emailTo: emailState, listLink })
+      .then(() => {
+        toggleShowShare();
+      })
+      .catch(error => {
+        console.log("error in handleShareLink: ", error);
+        //implement share settings error state...
+        toggleShowShare();
+      });
   };
 
   const onEmailChange = e => {
@@ -40,12 +67,77 @@ const ListSettingsAndShare = ({ toggleShowShare, list }) => {
     toggleShowShare();
   };
 
-  const toggleShowUsers = () =>{
-    showUsersState ? setShowUsersState(false) : setShowUsersState(true)
-  }
+  const toggleShowUsers = () => {
+    showUsersState ? setShowUsersState(false) : setShowUsersState(true);
+  };
+
+  const isUserLoneManager = () => {
+    if (isCurrentUserManagerState) {
+      for (let subscribedUser of subscribedUsersState) {
+        if (
+          subscribedUser.user._id !== currentUser._id &&
+          subscribedUser.manager
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  const unsubscribeList = () => {
+    axios
+      .post("/api/unsubscribeUserFromList", {
+        userIdToUnsubscribe: currentUser._id,
+        listId: list._id
+      })
+      .then(() => {
+        console.log("unsubscribed from list");
+      })
+      .catch(error => {
+        console.log("error in unsubscribeList: ", error);
+        window.alert("unable to unsubscribe from a list");
+      });
+  };
+
+  const onUnsubscribeFromList = () => {
+    if (!isCurrentUserManagerState) {
+      if (subscribedUsersState.length === 1) {
+        onDeleteList();
+      } else {
+        return unsubscribeList();
+      }
+    } else {
+      if (isUserLoneManager()) {
+        return window.alert(
+          "unable to unsubscribe list, you are the only one manager. to unsubscribe it, you need to set some other manager, or delete list"
+        );
+      } else {
+        return unsubscribeList();
+      }
+    }
+  };
+
+  const onDeleteList = () => {
+    axios
+      .post("/api/deleteList", { listIdToDelete: list._id })
+      .then(() => {
+        history.push("/");
+      })
+      .catch(error => {
+        console.log("error in onDeleteList: ", error);
+        window.alert("unable to delete list");
+      });
+  };
 
   return (
     <div>
+      <div>
+        <button onClick={onUnsubscribeFromList}>Unsubscribe</button>
+        {isCurrentUserManagerState && (
+          <button onClick={onDeleteList}>Delete List</button>
+        )}
+      </div>
       <div>
         <label>
           {" "}
@@ -65,10 +157,24 @@ const ListSettingsAndShare = ({ toggleShowShare, list }) => {
           />
         </label>
         <button type="submit">Share via email</button>
+        <div>
+          {" "}
+          <a href={`whatsapp://send?text=${listLink}`}>Share on WhatsApp</a>
+        </div>
       </form>
-      <button onClick={toggleShowUsers}>X users subscribed to this list</button>
+      <button onClick={toggleShowUsers}>
+        {subscribedUsersState ? subscribedUsersState.length : 0} users
+        subscribed to this list
+      </button>
       <button onClick={onFormClose}>X</button>
-      {showUsersState && subscribedUsersState && <SubscribedUsersList  subscribedUsersState={subscribedUsersState} listManagers={list.managers}/>}
+      {showUsersState && subscribedUsersState && (
+        <SubscribedUsersList
+          setSubscribedUsersState={setSubscribedUsersState}
+          subscribedUsersState={subscribedUsersState}
+          isCurrentUserManager={isCurrentUserManagerState}
+          listId={list._id}
+        />
+      )}
     </div>
   );
 };

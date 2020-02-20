@@ -1,22 +1,18 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 const ListItem = ({
-  listId,
-  fetchList,
+  removeItem,
+  changeCheckItem,
   itemData: { _id, itemName, category, checked }
 }) => {
   const [checkedState, setCheckedState] = useState(checked);
-
-  const handleRemoveItem = async () => {
-    axios.delete(`/api/removeitem/${_id}/${listId}`).then(() => {
-      fetchList();
-    });
+  const handleRemoveItem = () => {
+    removeItem(_id);
   };
 
   const handleCheckedChange = async e => {
     setCheckedState(e.target.checked);
-     await axios.put(`/api/checklistitem/${listId}/${_id}/${e.target.checked}`)
+    changeCheckItem(_id, e.target.checked);
   };
 
   return (

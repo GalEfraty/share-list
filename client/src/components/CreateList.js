@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
-const CreateList = ({ fetchUserListOverView }) => {
+const CreateList = ({ addList }) => {
   const [newListNameState, setNewListNameState] = useState("");
 
-  const handleCreateList = async e => {
+  const handleCreateList = e => {
     e.preventDefault();
-    await axios.post("/api/createList", { newListNameState });
+    addList(newListNameState)
     setNewListNameState("");
-    fetchUserListOverView();
   };
 
   const onNewListNameChange = e => {
@@ -31,7 +29,7 @@ const CreateList = ({ fetchUserListOverView }) => {
         <br></br>
         <button type="submit">Create!</button>
         <Link to="/">
-          <button>go back home</button>
+          <button>cancel</button>
         </Link>
       </form>
     </div>
