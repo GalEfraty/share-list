@@ -2,31 +2,33 @@ import React, { useState, useEffect, useRef } from "react";
 import ListOverView from "./ListOverView";
 import CreateList from "./CreateList";
 import axios from "axios";
+import "../../styles/home.css";
+import _ from "lodash";
 
 const Home = () => {
   const [showCreateListstate, setShowCreateListstate] = useState(false);
   const [listsState, setListsState] = useState("");
-  const isCancelled = useRef(false);
+  const isCancelledHome = useRef(false);
 
   useEffect(() => {
-    
-    const fetchUserListOverView = () => {
-      try {
-        axios.get("/api/getSubscribedListsNames").then(response => {
-          if (!isCancelled.current) {
-            setListsState(response.data.lists);
-          }
-        });
-      } catch (error) {
-        console.log("error in fetchUserListOverView", error);
-        window.alert("error in fetchUserListOverView");
-      }
-    };
     fetchUserListOverView();
     return () => {
-      isCancelled.current = true;
+      isCancelledHome.current = true;
     };
   }, [listsState]);
+
+  const fetchUserListOverView = () => {
+    try {
+      axios.get("/api/getSubscribedListsNames").then(response => {
+        if (!isCancelledHome.current) {
+          setListsState(response.data.lists);
+        }
+      });
+    } catch (error) {
+      console.log("error in fetchUserListOverView", error);
+      window.alert("error in fetchUserListOverView");
+    }
+  };
 
   const addList = newListName => {
     axios
@@ -38,12 +40,9 @@ const Home = () => {
           _id: response.data._id,
           listName: response.data.listName
         };
-        const tempListsState = listsState;
-
+        let tempListsState = _.cloneDeep(listsState);
         tempListsState.push(newListOverView);
-        console.log("temp state: ", tempListsState);
         setListsState(tempListsState);
-        console.log("real state: ", listsState);
       })
       .catch(error => {
         console.log("error in handleCreateList: ", error);
@@ -73,12 +72,18 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <h1>Home</h1>
-      <button onClick={onShowCreateListClicked}>Create New List</button>
+    <div className="container home-wrapper">
+      <h1 className="home-title">Home</h1>
+      <button
+        className="home-create-list-btn"
+        onClick={onShowCreateListClicked}
+      >
+        Create New List
+      </button>
       {showCreateListstate && <CreateList addList={addList} />}
-      {listsState && renderListsOverView()}
-      <a href="/api/logout">logout</a>
+      <div className="home-lists-wrapper container">
+        {listsState && renderListsOverView()}
+      </div>
     </div>
   );
 };

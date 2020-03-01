@@ -1,7 +1,9 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { authContext } from "../context/auth";
+import { authContext } from "../../context/auth";
 import SubscribedUsersList from "./SubscribedUsersList";
+import "../../styles/listSettings.css";
+import copy from "copy-to-clipboard";
 
 const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
   const { currentUser } = useContext(authContext);
@@ -12,6 +14,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
   const [isCurrentUserManagerState, setIsCurrentUserManagerState] = useState(
     false
   );
+  const [copyBtnState, setCopyBtnState] = useState("Copy Share Link");
   const listLink = `${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName}/${list._id}/${list.listName}`;
 
   useEffect(() => {
@@ -53,18 +56,12 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
       })
       .catch(error => {
         console.log("error in handleShareLink: ", error);
-        //implement share settings error state...
         toggleShowShare();
       });
   };
 
   const onEmailChange = e => {
     setEmailState(e.target.value);
-  };
-
-  const onFormClose = () => {
-    setEmailState("");
-    toggleShowShare();
   };
 
   const toggleShowUsers = () => {
@@ -92,6 +89,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
         listId: list._id
       })
       .then(() => {
+        history.push("/");
         console.log("unsubscribed from list");
       })
       .catch(error => {
@@ -130,51 +128,83 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
       });
   };
 
+  const copyShareLink = () => {
+    copy(listLink);
+    setCopyBtnState("Link copied!");
+  };
+
   return (
-    <div>
-      <div>
-        <button onClick={onUnsubscribeFromList}>Unsubscribe</button>
-        {isCurrentUserManagerState && (
-          <button onClick={onDeleteList}>Delete List</button>
-        )}
-      </div>
-      <div>
-        <label>
-          {" "}
-          list link
-          <input type="text" disabled value={listLink} />
-        </label>
-      </div>
-      <form onSubmit={handleShareLink}>
-        <label>
-          share List link to a friend via email
-          <input
-            type="email"
-            name="email"
-            placeholder="friend's email"
-            value={emailState}
-            onChange={onEmailChange}
-          />
-        </label>
-        <button type="submit">Share via email</button>
-        <div>
-          {" "}
-          <a href={`whatsapp://send?text=${listLink}`}>Share on WhatsApp</a>
+    <div className="list-settings-wrapper">
+      <fieldset className="settings-fieldset">
+        <legend className="w-auto settings-legend">Danger Zone</legend>
+        <div className="settings-danger-wrapper">
+          <button
+            className="settings-danger-btns"
+            onClick={onUnsubscribeFromList}
+          >
+            Unsubscribe
+          </button>
+          {isCurrentUserManagerState && (
+            <button className="settings-danger-btns" onClick={onDeleteList}>
+              Delete List
+            </button>
+          )}
         </div>
-      </form>
-      <button onClick={toggleShowUsers}>
-        {subscribedUsersState ? subscribedUsersState.length : 0} users
-        subscribed to this list
-      </button>
-      <button onClick={onFormClose}>X</button>
-      {showUsersState && subscribedUsersState && (
-        <SubscribedUsersList
-          setSubscribedUsersState={setSubscribedUsersState}
-          subscribedUsersState={subscribedUsersState}
-          isCurrentUserManager={isCurrentUserManagerState}
-          listId={list._id}
-        />
-      )}
+      </fieldset>
+      <fieldset className="settings-fieldset">
+        <legend className="w-auto settings-legend">Share</legend>
+        <div className="settings-share-copy-whatsapp-wrapper">
+          <button className="settings-share-copy-btn" onClick={copyShareLink}>
+            <i className="far fa-copy settings-share-copy-icon"></i>
+            {copyBtnState}
+          </button>
+          <a href={`whatsapp://send?text=${listLink}`}>
+            <i className="fab fa-whatsapp-square settings-share-whatsapp-icon"></i>
+          </a>
+        </div>
+
+        <form onSubmit={handleShareLink}>
+          <fieldset className="settings-share-fieldset">
+            <legend className="w-auto settings-share-title-legend">
+              Share List by email
+            </legend>
+            <div className="settings-share-form-wrapper">
+              <span className="settings-share-shtrudel-wrapper">@</span>
+              <input
+                className="settings-share-email-input"
+                required
+                type="email"
+                name="email"
+                placeholder="friend's email"
+                value={emailState}
+                onChange={onEmailChange}
+              />
+              <button type="submit" className="settings-share-send-email-btn">
+                <i className="far fa-paper-plane settings-share-send-email-btn-icon"></i>
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </fieldset>
+
+      <fieldset className="settings-fieldset">
+        <legend className="w-auto settings-legend">Users</legend>
+        <div className="settings-users-show-btn-wrapper">
+          <button onClick={toggleShowUsers} className="settings-users-show-btn">
+            {subscribedUsersState ? subscribedUsersState.length : 0} users
+            subscribed to this list (show)
+          </button>
+        </div>
+        {showUsersState && subscribedUsersState && (
+          <SubscribedUsersList
+            setSubscribedUsersState={setSubscribedUsersState}
+            subscribedUsersState={subscribedUsersState}
+            isCurrentUserManager={isCurrentUserManagerState}
+            listId={list._id}
+            setShowUsersState={setShowUsersState}
+          />
+        )}
+      </fieldset>
     </div>
   );
 };

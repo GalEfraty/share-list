@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 
 const ListOverview = ({ listName, listId }) => {
   return (
-    <div style={{ border: "solid black 1px" }}>
       <Link
+      className="home-list-overview-wrapper"
         style={{ textDecoration: "none", color: "black" }}
         to={`/list/${listId}`}
       >
-        <div>list: {listName}</div>
+        <span>{listName}</span>
       </Link>
-    </div>
   );
 };
+
 
 export default ListOverview;

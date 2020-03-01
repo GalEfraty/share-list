@@ -1,9 +1,9 @@
 import React, { useCallback, useContext } from "react";
 import { withRouter, Redirect } from "react-router";
 import { authContext } from "../context/auth";
+import "../styles/login.css";
 
 const Login = ({ history }) => {
-
   const handleLogin = useCallback(
     async e => {
       e.preventDefault();
@@ -20,11 +20,13 @@ const Login = ({ history }) => {
   }
 
   return (
-    <div>
-      <h1>Log in</h1>
-      <form onSubmit={handleLogin}>
-        <button type="submit">Log in</button>
-      </form>
+    <div className="login-wrapper">
+      <div className="container login-inner-wrapper">
+        <h4 className="login-header">Login to Share List</h4>
+        <form onSubmit={handleLogin}>
+          <button className="login-submit-btn" type="submit">Login with google</button>
+        </form>
+      </div>
     </div>
   );
 };

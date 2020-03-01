@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import AddItem from "./AddItem";
 import ListItem from "./ListItem";
+import "../../styles/list.css";
 
 const ListItemsCollection = ({ listState, setListState }) => {
   const removeItem = itemId => {
@@ -76,7 +77,9 @@ const ListItemsCollection = ({ listState, setListState }) => {
   return (
     <div>
       <AddItem addItem={addItem} />
-      {listState && renderItems()}
+      <div className="container list-items-collection">
+        {listState && renderItems()}
+      </div>
     </div>
   );
 };

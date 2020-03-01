@@ -1,0 +1,87 @@
+
+.home-title{
+    align-self: center;
+    display: block;
+    color: #1089ff;
+    margin-left: 2%;
+}
+
+.home-create-list-btn{
+    border-radius: 10px;
+    background-color: #1089ff;
+    color: white;
+    border: #23374d solid 1px;
+    margin-left: 2%;
+}
+.home-create-list-btn:hover{
+    font-size: 1.1rem;
+    background-color: #1089ff;
+    color: white;
+    transition: 0.3s ease-out;
+}
+
+.home-create-list-wrapper{
+    padding: 3%;
+    margin-bottom: 3%;
+    transition: 2s ease-out;
+}
+
+.home-create-list-name-input{
+    border-radius: 10px 0px 0px 10px;
+    border: #1089ff solid 2px;
+    text-align: center;
+    width: 65%;
+    padding: 3px;
+    background-color: #ebebeb;
+}
+
+.home-create-list-name-input:hover{
+    background-color: white;
+}
+
+.home-create-list-create-btn{
+    border-radius: 0px 10px 10px 0px;
+    border: #1089ff solid 2px;
+    border-left: none;
+    padding: 3px 6px 3px 6px;
+    color: #23374d;
+    width: 35%;
+}
+.home-create-list-create-btn:hover{
+    background-color: #1089ff;
+    color: white;
+    transition: 0.3s ease-out;
+}
+
+.home-lists-wrapper{
+    margin-top: 3%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    padding: 0%;
+}
+
+.home-list-overview-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1089ff;
+    border-radius: 15px;
+    border: white solid 3px;
+    width: 130px;
+    height: 90px;
+    margin: 5px;
+    padding: 2%;
+}
+
+.home-list-overview-wrapper span {
+    background-color: inherit;
+    color: white;
+}
+
+.home-list-overview-wrapper:hover{
+    background-color: #23374d;
+    width: 135px;
+    font-size: 1.1rem;
+    transition: 0.3s ease-out;
+}

@@ -1,17 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { AuthProvider } from "../context/auth";
-
+import "../styles/general.css";
 import PrivateRoute from "./PrivateRoute";
-import Home from "./Home.js";
+import Home from "./Home/Home.js";
 import LoginPage from "./LoginPage";
-import ListView from "./ListView";
+import ListView from "./ListView/ListView";
 import JoinList from "./JoinList";
+import Header from "./Headers/Header";
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
+        <Header />
         <Switch>
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/list/:id" component={ListView} />

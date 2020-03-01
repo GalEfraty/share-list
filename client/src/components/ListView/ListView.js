@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-
+import "../../styles/list.css";
 import { Link } from "react-router-dom";
-import ListSettingsAndShare from "./ListSettingsAndShare";
+import ListSettingsAndShare from "../ListSettings/ListSettingsAndShare";
 import ListItemsCollection from "./ListItemsCollection";
 import ListError from "./ListError";
 
@@ -41,9 +41,20 @@ const ListView = ({ match, history }) => {
   };
 
   return (
-    <div>
-      <h3>{listState.listName}</h3>
-      <button onClick={toggleShowShare}>Settings and Share</button>
+    <div className="container">
+      <h3 className="list-title">{listState.listName}</h3>
+      <div className="list-back-settings-btns-wrapper">
+        <button
+          onClick={toggleShowShare}
+          className="list-back-settings-btns-btn"
+        >
+          Settings and Share
+        </button>
+        <Link to="/">
+          <button className="list-back-settings-btns-btn">back Home</button>
+        </Link>
+      </div>
+
       {showSettingsState && (
         <ListSettingsAndShare
           toggleShowShare={toggleShowShare}
@@ -51,9 +62,6 @@ const ListView = ({ match, history }) => {
           list={listState}
         />
       )}
-      <Link to="/">
-        <button>back Home</button>
-      </Link>
 
       {listState && (
         <ListItemsCollection

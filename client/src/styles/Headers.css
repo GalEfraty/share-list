@@ -1,0 +1,54 @@
+.headers_link_icon{
+    margin-right: 10px;
+    background-color: inherit;
+} 
+
+
+.header-wrapper{
+    height: 8vh;
+    font-size: 1.5rem;
+    padding: 5px;
+    background-color: #1089ff;
+}
+
+.header-link{
+    color: #eeeeee;
+    margin-left: 2%;
+    background-color: inherit;
+    padding-top: 0.5%;
+}
+
+.header-link:hover{
+    color: #eeeeee;
+}
+
+.header-brand{
+    background-color: inherit;
+}
+
+
+.header-private{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-private-logout-btn{
+    color: #23374d;
+    border: #23374d solid 2px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    padding: auto;
+    margin-right: 2%;
+}
+
+.header-private-logout-btn:hover{
+    background-color: #1089ff;
+    color: #eeeeee;
+    border: #eeeeee solid 2px;
+    font-size: 1.2rem;
+    transition: 0.3s ease-out;
+}
+
+
+
+

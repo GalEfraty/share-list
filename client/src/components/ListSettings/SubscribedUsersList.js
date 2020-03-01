@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import SubscribedUser from "./SubscribedUser";
-import { authContext } from "../context/auth";
+import { authContext } from "../../context/auth";
 import axios from "axios";
 
 const SubscribedUsersList = ({
@@ -20,7 +20,7 @@ const SubscribedUsersList = ({
       .then(() => {
         const tempSubscribedUsers = subscribedUsersState.filter(
           subscribedUser => {
-            return subscribedUser.user._id === userId;
+            return subscribedUser.user._id !== userId;
           }
         );
         setSubscribedUsersState(tempSubscribedUsers);
@@ -37,8 +37,8 @@ const SubscribedUsersList = ({
       .then(() => {
         const tempSubscribedUsers = subscribedUsersState;
         tempSubscribedUsers.forEach(subscribedUser => {
-          if (SubscribedUser.user._id === userId) {
-            SubscribedUser.manager = true;
+          if (subscribedUser.user._id === userId) {
+            subscribedUser.manager = true;
           }
         });
         setSubscribedUsersState(tempSubscribedUsers);
@@ -70,7 +70,11 @@ const SubscribedUsersList = ({
     return subscribedUsersComponent;
   };
 
-  return <div>{subscribedUsersState && renderSubscribedUsers()}</div>;
+  return (
+    <div className="container settings-users-wrapper">
+      {subscribedUsersState && renderSubscribedUsers()}
+    </div>
+  );
 };
 
 export default SubscribedUsersList;

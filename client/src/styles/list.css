@@ -1,0 +1,121 @@
+.list-title{
+    display: flex;
+    justify-content: center;
+    color: #1089ff;
+    margin-top: 6px;
+}
+
+.list-back-settings-btns-wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 3% 0% 3% 0%;
+}
+
+.list-back-settings-btns-btn{
+    border: white solid 2px;
+    border-radius: 10px;
+    padding: 3px 5px 3px 5px;
+    background-color: #1089ff;
+    color: white;
+}
+.list-back-settings-btns-btn:hover{
+    border: #23374d solid 2px;
+    background-color: #1089ff;
+    font-size: 1.1rem;
+    transition: 0.3s ease-out;
+}
+
+.list-add-item-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.list-add-item-inputs{
+    padding: 1px 2px 1px 5px;
+    border: #23374d solid 2px;
+}
+
+.list-add-item-inputs-item{
+    width: 55%;
+    border-radius: 8px 0px 0px 8px;
+}
+.list-add-item-inputs:hover{
+    background-color: white;
+    transition: 0.3s ease-out;
+}
+
+.list-add-item-inputs-category{
+    width: 35%;
+    border-right: none;
+    border-left: none;
+}
+
+.list-add-item-add-btn{
+    border-radius: 0px 8px 8px 0px;
+    border: #23374d solid 2px;
+    width: 10%;
+    color: white;
+    background-color: #1089ff;
+}
+
+.list-add-item-add-btn:hover{
+
+    transition: 0.3s ease-out;
+}
+
+.list-add-item-add-btn-icon{
+    background-color: inherit;
+}
+
+.list-items-collection{
+    margin-top: 2%;
+    /* border-radius: 8px;
+    border: #d45d79 solid 2px; */
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-item-wrapper{
+    margin-bottom: 1%;
+    border-radius: 5px;
+    border: #1089ff solid 2px;
+    display: flex;
+    background-color: #1089ff;
+}
+
+.list-item-checkbox{
+    border: #1089ff solid 2px;
+    width: 30px;
+    background-color: #1089ff;
+}
+
+.list-item-name{
+    border: #1089ff solid 2px;
+    padding-left: 3px;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+.list-item-category{
+    flex-grow: rest;
+    border-radius: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+    border: #1089ff solid 2px;
+}
+
+.list-item-delete{
+    background-color: #1089ff;
+    border: #1089ff solid 2px;
+    border-radius: 0px 3px 3px 0px ;
+}
+
+.list-item-delete-icon{
+    color: white;
+    background-color: inherit;
+}
+
+
+

@@ -1,0 +1,151 @@
+.list-settings-wrapper{
+    margin-bottom: 2%;
+}
+.settings-legend{
+    color: #23374d;
+    margin-bottom: 0px;
+}
+
+.settings-fieldset{
+    border: 2px #1089ff solid;
+    border-radius: 5px;
+    padding: 2%;
+}
+
+.settings-danger-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.settings-danger-btns{
+    border-radius: 5px;
+    border: 2px #1089ff solid;
+    background-color: #23374d;
+    color: white;
+}
+
+.settings-danger-btns:hover{
+    background-color: red;
+    border: 2px yellow solid;
+    font-size: 1.1rem;
+    transition: 0.3s ease-out;
+}
+
+.settings-share-copy-whatsapp-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.settings-share-copy-btn{
+    border-radius: 5px;
+    border: white solid 2px;
+    color: white;
+    background-color: #1089ff;
+}
+
+.settings-share-copy-icon{
+    margin-right: 8px;
+    background-color: inherit;
+}
+
+.settings-share-whatsapp-icon{
+    border-radius: 5px;
+    font-size: 2rem;
+}
+
+.settings-share-fieldset{
+    border: 2px #1089ff solid;
+    border-radius: 5px;
+    padding: 1%;
+    margin-top: 1%;
+}
+
+.settings-share-title-legend{
+    color: #1089ff;
+    font-size: 1rem;
+}
+
+.settings-share-form-wrapper{
+    border-radius: 5px;
+    border: #1089ff solid 2px;
+    display: flex;
+    background-color: #1089ff;
+}
+
+.settings-share-shtrudel-wrapper{
+    border: #1089ff solid 2px;
+    border-radius: 5px;
+    background-color: inherit;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+.settings-share-email-input{
+    border: #1089ff solid 2px;
+    border-radius: 5px;
+    flex-grow: 1;
+    padding-left: 3px;
+}
+
+.settings-share-send-email-btn{
+    display: inline;
+    border: #1089ff solid 2px;
+    border-radius: 5px;
+    color: #1089ff;
+}
+
+.settings-users-show-btn-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.settings-users-show-btn{
+    border-radius: 5px;
+    border: solid 2px #23374d;
+    background-color: #1089ff;
+    color: white;
+}
+
+.settings-users-wrapper{
+    margin-top: 2%;
+    border: #1089ff solid 2px;
+    border-radius: 5px;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-users-user-wrapper{
+    margin-top: 1%;
+    margin-bottom: 1%;
+
+}
+
+.settings-users-user-avatar{
+    margin-left: 3px;
+    margin-right: 5px;
+    color: #1089ff;
+}
+
+.settings-users-user-name{
+    color: #23374d;
+}
+
+.settings-users-user-unsubscribe-by-manager{
+    border-radius: 5px;
+    border: 2px #1089ff solid;
+    background-color: #23374d;
+    color: white;
+    margin-right: 4px;
+}
+
+.settings-users-user-make-manager{
+    border-radius: 5px;
+    border: 2px #1089ff solid;
+    background-color: #1089ff;
+    color: white;
+    margin-right: 4px;
+}
