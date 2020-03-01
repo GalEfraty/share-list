@@ -135,7 +135,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
 
   return (
     <div className="list-settings-wrapper">
-      <fieldset className="settings-fieldset">
+      <fieldset className="settings-fieldset settings-danger-fieldset">
         <legend className="w-auto settings-legend">Danger Zone</legend>
         <div className="settings-danger-wrapper">
           <button
@@ -151,7 +151,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
           )}
         </div>
       </fieldset>
-      <fieldset className="settings-fieldset">
+      <fieldset className="settings-fieldset settings-share-fieldset">
         <legend className="w-auto settings-legend">Share</legend>
         <div className="settings-share-copy-whatsapp-wrapper">
           <button className="settings-share-copy-btn" onClick={copyShareLink}>
@@ -164,7 +164,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
         </div>
 
         <form onSubmit={handleShareLink}>
-          <fieldset className="settings-share-fieldset">
+          <fieldset className="settings-share-email-fieldset">
             <legend className="w-auto settings-share-title-legend">
               Share List by email
             </legend>
@@ -187,7 +187,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
         </form>
       </fieldset>
 
-      <fieldset className="settings-fieldset">
+      <fieldset className="settings-fieldset settings-users-fieldset">
         <legend className="w-auto settings-legend">Users</legend>
         <div className="settings-users-show-btn-wrapper">
           <button onClick={toggleShowUsers} className="settings-users-show-btn">

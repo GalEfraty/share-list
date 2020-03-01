@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import SubscribedUser from "./SubscribedUser";
 import { authContext } from "../../context/auth";
 import axios from "axios";
+import _ from "lodash";
 
 const SubscribedUsersList = ({
   subscribedUsersState,
@@ -35,7 +36,7 @@ const SubscribedUsersList = ({
     axios
       .post("/api/makeUserManager", { userId, listId })
       .then(() => {
-        const tempSubscribedUsers = subscribedUsersState;
+        const tempSubscribedUsers = _.cloneDeep(subscribedUsersState);
         tempSubscribedUsers.forEach(subscribedUser => {
           if (subscribedUser.user._id === userId) {
             subscribedUser.manager = true;

@@ -7,7 +7,7 @@
 }
 
 .settings-fieldset{
-    border: 2px #1089ff solid;
+    border: 2px #23374d solid;
     border-radius: 5px;
     padding: 2%;
 }
@@ -53,8 +53,8 @@
     font-size: 2rem;
 }
 
-.settings-share-fieldset{
-    border: 2px #1089ff solid;
+.settings-share-email-fieldset{
+    border: 2px #23374d solid;
     border-radius: 5px;
     padding: 1%;
     margin-top: 1%;
@@ -148,4 +148,42 @@
     background-color: #1089ff;
     color: white;
     margin-right: 4px;
+}
+
+@media screen and (min-width: 800px) {
+    .list-settings-wrapper{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        transition: 1s ease-out;
+
+        
+    }
+    .settings-danger-fieldset{
+        margin-right: 2%;
+        min-width: 250px;
+        transition: 1s ease-out;
+
+    }
+
+    .settings-share-fieldset{
+        min-width: 340px;
+        transition: 1s ease-out;
+
+        
+    }
+
+    .settings-users-fieldset{
+        min-width: 250px;
+        transition:1s ease-out;
+
+    }
+}
+
+@media screen and (min-width: 992px) {
+
+    .settings-users-fieldset{
+        margin-left: 2%;
+        transition:1s ease-out;
+    }
 }

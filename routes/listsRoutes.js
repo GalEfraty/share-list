@@ -206,7 +206,7 @@ module.exports = app => {
     try {
       const list = await List.findById(listId);
       list.subscribedUsers.forEach(subscribedUser => {
-        if (subscribedUser.user === userId) {
+        if (subscribedUser.user.equals(userId)) {
           subscribedUser.manager = true;
         }
       });

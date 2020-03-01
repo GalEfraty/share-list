@@ -1,0 +1,51 @@
+.join-wrapper{
+    margin-top: 2%;
+}
+
+.join-wrapper h3 {
+    color: #23374d;
+}
+
+.join-main-text{
+    color: #23374d;
+}
+
+.join-inviter-name{
+    text-decoration: underline;
+}
+
+.join-list-name{
+    font-size: 1.5rem;
+}
+
+.join-invited-name{
+    color: #1089ff;
+}
+
+.join-btn{
+    border-radius: 5px;
+    background-color: #1089ff;
+    color: white;
+    border: #23374d solid 1px;
+}
+
+.join-btn:hover{
+    font-size: 1.1rem;
+    background-color: #23374d;
+    transition: 0.3s ease-out;
+}
+
+.join-login-btn{
+    color: #23374d;
+    border: #1089ff solid 2px;
+    border-radius: 15px;
+    padding: 6px;
+    margin-left: 2%;
+}
+
+.join-login-btn:hover{
+    background-color: #1089ff;
+    color: white;
+    font-size: 1.2rem;
+    transition: 0.3s ease-out;
+}

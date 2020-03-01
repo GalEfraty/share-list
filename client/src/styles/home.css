@@ -8,7 +8,7 @@
 
 .home-create-list-btn{
     border-radius: 10px;
-    background-color: #1089ff;
+    background-color: #23374d;
     color: white;
     border: #23374d solid 1px;
     margin-left: 2%;
@@ -22,7 +22,6 @@
 
 .home-create-list-wrapper{
     padding: 3%;
-    margin-bottom: 3%;
     transition: 2s ease-out;
 }
 
@@ -54,7 +53,7 @@
 }
 
 .home-lists-wrapper{
-    margin-top: 3%;
+    margin-top: 4px;
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
