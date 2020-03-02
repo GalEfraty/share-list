@@ -15,7 +15,8 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
     false
   );
   const [copyBtnState, setCopyBtnState] = useState("Copy Share Link");
-  const listLink = `${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName}/${list._id}/${list.listName}`;
+  // let listLink = `${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName.replace(" ", "%20")}/${list._id}/${list.listName.replace(" ", "%20")}`
+  const listLink = encodeURI(`${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName}/${list._id}/${list.listName}`)
 
   useEffect(() => {
     const fetchSubscribedUsersData = () => {
@@ -158,7 +159,7 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
             <i className="far fa-copy settings-share-copy-icon"></i>
             {copyBtnState}
           </button>
-          <a href={`whatsapp://send?text=${listLink}`}>
+          <a href={encodeURI(`whatsapp://send?text=${listLink}`)}>
             <i className="fab fa-whatsapp-square settings-share-whatsapp-icon"></i>
           </a>
         </div>
