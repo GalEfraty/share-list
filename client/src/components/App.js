@@ -6,7 +6,7 @@ import PrivateRoute from "./PrivateRoute";
 import Home from "./Home/Home.js";
 import LoginPage from "./LoginPage";
 import ListView from "./ListView/ListView";
-import JoinList from "./JoinList";
+import JoinList from "./joinList/JoinList";
 import Header from "./Headers/Header";
 
 const App = () => {

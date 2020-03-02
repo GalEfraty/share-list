@@ -50,8 +50,10 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
 
   const handleShareLink = e => {
     e.preventDefault();
+    console.log("listname: ", list.listName)
+
     axios
-      .post("/api/shareListViaEmail", { emailTo: emailState, listLink })
+      .post("/api/shareListViaEmail", { emailTo: emailState, listLink, listName:list.listName })
       .then(() => {
         toggleShowShare();
       })

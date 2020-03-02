@@ -4,13 +4,13 @@ const shareListEmailTemplate = require("./shareListEmailTemplate");
 
 sgMail.setApiKey(keys.sendGridKey);
 
-const sendShareMail = (fullNameFrom, listLink, emailFrom, emailTo) => {
+const sendShareMail = (fullNameFrom, listLink, emailFrom, emailTo, listName) => {
   const msg = {
     to: emailTo,
     // from: "no-replay@share-list.com",
     from: emailFrom,
     subject: "join the list",
-    html: shareListEmailTemplate(fullNameFrom, listLink)
+    html: shareListEmailTemplate(fullNameFrom, listLink, listName)
   };
 
   try {

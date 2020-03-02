@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { authContext } from "../context/auth";
+import { authContext } from "../../context/auth";
 import JoinListError from "./JoinListError";
-import "../styles/joinList.css";
+import "../../styles/joinList.css";
 
 const JoinList = ({ match, history }) => {
   const { currentUser } = useContext(authContext);

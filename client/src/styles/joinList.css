@@ -49,3 +49,30 @@
     font-size: 1.2rem;
     transition: 0.3s ease-out;
 }
+
+.join-error-wrapper{
+    margin-top: 3%;
+    display: flex;
+    flex-direction: column;
+    border: #23374d 1px solid;
+    border-radius: 5px;
+    padding: 3%;
+    background-color: #bdbdbd;
+}
+
+.join-error-text{
+    background-color: inherit;
+}
+
+.join-error-gohome-btn{
+    width: 100px;
+    border-radius: 5px;
+    border: #23374d 1px solid;
+}
+
+.join-error-gohome-btn:hover{
+    background-color: #23374d;
+    color: white;
+    transition: 0.3s ease-out;
+}
+

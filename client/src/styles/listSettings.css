@@ -51,6 +51,11 @@
 .settings-share-whatsapp-icon{
     border-radius: 5px;
     font-size: 2rem;
+    color: #4FCE5D;
+}
+.settings-share-whatsapp-icon:hover{
+    color: #1089ff;
+    transition: 0.3s ease-out;
 }
 
 .settings-share-email-fieldset{
@@ -95,6 +100,17 @@
     border: #1089ff solid 2px;
     border-radius: 5px;
     color: #1089ff;
+}
+
+.settings-share-send-email-btn-icon{
+    color: inherit;
+    background-color: inherit;
+}
+
+.settings-share-send-email-btn:hover{
+    background-color: #23374d;
+    color: white;
+    transition: 0.3s ease-out;
 }
 
 .settings-users-show-btn-wrapper{

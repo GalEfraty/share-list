@@ -116,9 +116,9 @@ module.exports = app => {
   app.post("/api/shareListViaEmail", requireLogin, (req, res) => {
     const fullNameFrom = req.user.fullName;
     const emailFrom = req.user.emails[0];
-    const { emailTo, listLink } = req.body;
+    const { emailTo, listLink, listName } = req.body;
     if (fullNameFrom && emailFrom && emailTo && listLink) {
-      sendShareMail(fullNameFrom, listLink, emailFrom, emailTo);
+      sendShareMail(fullNameFrom, listLink, emailFrom, emailTo, listName);
       res.status(200).send({ msg: "email sent!" });
     } else {
       res.status(400).send({ error: "unable to send email" });
