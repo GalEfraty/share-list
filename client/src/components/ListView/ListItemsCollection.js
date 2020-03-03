@@ -33,7 +33,7 @@ const ListItemsCollection = ({ listState, setListState }) => {
     axios
       .delete(`/api/removeitem/${itemId}/${listState._id}`)
       .then(() => {
-        console.log("item deleted in server");
+        renderItems()
       })
       .catch(error => {
         console.error("error in handleRemoveItem: ", error);
@@ -106,7 +106,6 @@ const ListItemsCollection = ({ listState, setListState }) => {
   };
 
   const renderItems = () => {
-    console.log("rendering items!");
     const { items } = listState;
 
     let ListItemComponents = [];
