@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddItem from "./AddItem";
 import ListItem from "./ListItem";
+import ListFilters from "./ListFilters";
 import "../../styles/list.css";
 
 const ListItemsCollection = ({ listState, setListState }) => {
+  const [allCategoriesState, setAllCategoriesState] = useState("");
+  const [selectedCategoryState, setSelectedCategoryState] = useState("");
+  const [searchState, setSearchState] = useState("");
+
+  useEffect(() => {
+    const fillAllCategories = () => {
+      let allCategories = [];
+      listState.items.forEach(item => {
+        if (item.category) {
+          allCategories.push(item.category);
+        }
+      });
+      setAllCategoriesState(new Set(allCategories));
+    };
+    fillAllCategories();
+  }, [listState]);
+
   const removeItem = itemId => {
     let items = listState.items.filter(item => {
       return !(item._id === itemId);
@@ -36,6 +54,8 @@ const ListItemsCollection = ({ listState, setListState }) => {
   };
 
   const addItem = (itemName, category) => {
+    itemName = itemName.trim().toLowerCase();
+    category = category.trim().toLowerCase();
     axios
       .post("/api/additem", {
         itemName: itemName,
@@ -55,11 +75,45 @@ const ListItemsCollection = ({ listState, setListState }) => {
       });
   };
 
+  const filterItems = items => {
+    const filters = { category: selectedCategoryState, search: searchState };
+    if (items) {
+      let filtered = items.filter(item => {
+
+        if (filters.category || filters.search) {
+          let filterInCategory = false;
+          let filterInSearch = false;
+
+          if (filters.category) {
+            if (filters.category === item.category) {
+              filterInCategory = true;
+            }
+          } else{ filterInCategory = true }
+          
+          if (filters.search) {
+            if (item.itemName.includes(filters.search.toLowerCase())) {
+              filterInSearch = true;
+            }
+          } else {filterInSearch = true;}
+
+          return filterInCategory && filterInSearch;
+        }
+        return false;
+      });
+      return filtered;
+    }
+    return "";
+  };
+
   const renderItems = () => {
+    console.log("rendering items!");
     const { items } = listState;
+
     let ListItemComponents = [];
     if (items) {
-      for (let item of items) {
+      const filteredItems =
+        selectedCategoryState || searchState ? filterItems(items) : items;
+      for (let item of filteredItems) {
         ListItemComponents.push(
           <ListItem
             key={item._id}
@@ -77,6 +131,13 @@ const ListItemsCollection = ({ listState, setListState }) => {
   return (
     <div>
       <AddItem addItem={addItem} />
+      <ListFilters
+        allCategoriesState={allCategoriesState}
+        selectedCategoryState={selectedCategoryState}
+        setSelectedCategoryState={setSelectedCategoryState}
+        searchState={searchState}
+        setSearchState={setSearchState}
+      />
       <div className="container list-items-collection">
         {listState && renderItems()}
       </div>

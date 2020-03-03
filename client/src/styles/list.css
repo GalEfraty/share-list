@@ -59,8 +59,9 @@
     background-color: #1089ff;
 }
 
-.list-add-item-add-btn:hover{
 
+.list-add-item-add-btn:hover{
+    background-color: #23374d;
     transition: 0.3s ease-out;
 }
 
@@ -117,5 +118,47 @@
     background-color: inherit;
 }
 
+.list-filters-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+}
 
+.list-filters-inner{
+    border: #1089ff solid 2px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    background-color: #1089ff;
+}
 
+.list-filters-inner-elements{
+    border-radius: 8px;
+    border: #1089ff 2px solid;
+}
+.list-filter-input{
+    padding-left: 4px;
+    width: 70%;
+}
+
+.list-filter-input:hover{
+    background-color: white;
+}
+
+.list-filter-select{
+    padding-bottom: 5px;
+}
+
+.list-filter-icon-wrapper{
+    padding: 5px 3px 0px 3px;
+}
+
+.list-filter-icon-wrapper:hover{
+    color: white;
+    background-color: #1089ff;
+    transition: 0.3s ease-out;
+}
+.list-filter-icon-inner{
+    color: inherit;
+    background-color: inherit;
+}
