@@ -15,6 +15,7 @@
 .settings-danger-wrapper{
     display: flex;
     justify-content: space-between;
+
 }
 
 .settings-danger-btns{
@@ -30,7 +31,52 @@
     font-size: 1.1rem;
     transition: 0.3s ease-out;
 }
+/**/
+.settings-general-edit-fieldset{
+    border: 2px #23374d solid;
+    border-radius: 5px;
+    padding: 1%;
+    margin-top: 5%;
+    overflow: auto;
+}
 
+.settings-edit-title-legend{
+    color: #1089ff;
+    font-size: 1rem;
+}
+
+.settings-edit-form-wrapper{
+    border-radius: 5px;
+    border: #1089ff solid 2px;
+    display: flex;
+    background-color: #1089ff;
+    margin-right: 2px;
+}
+.settings-general-new-list-name-input{
+    border: #1089ff solid 2px;
+    border-radius: 5px;
+    flex-grow: 1;
+    padding-left: 3px;
+}
+
+.settings-general-change-name-btn{
+    border: #1089ff solid 2px;
+    border-radius: 5px;
+    color: #1089ff;
+}
+
+.settings-general-change-name-btn-icon{
+    color: inherit;
+    background-color: inherit;
+}
+
+.settings-general-change-name-btn:hover{
+    background-color: #23374d;
+    color: white;
+    transition: 0.3s ease-out;
+}
+
+/**/
 .settings-share-copy-whatsapp-wrapper{
     display: flex;
     justify-content: space-between;
@@ -63,6 +109,7 @@
     border-radius: 5px;
     padding: 1%;
     margin-top: 1%;
+    
 }
 
 .settings-share-title-legend{
@@ -171,34 +218,23 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        transition: 1s ease-out;
-
-        
     }
-    .settings-danger-fieldset{
+    .settings-general-fieldset{
         margin-right: 2%;
         min-width: 250px;
-        transition: 1s ease-out;
-
     }
 
     .settings-share-fieldset{
         min-width: 340px;
-        transition: 1s ease-out;
-
-        
     }
 
     .settings-users-fieldset{
         min-width: 250px;
-        transition:1s ease-out;
-
     }
 }
 
 @media screen and (min-width: 992px) {
     .settings-users-fieldset{
         margin-left: 2%;
-        transition:1s ease-out;
     }
 }

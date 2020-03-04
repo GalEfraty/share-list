@@ -15,8 +15,10 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
     false
   );
   const [copyBtnState, setCopyBtnState] = useState("Copy Share Link");
-  // let listLink = `${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName.replace(" ", "%20")}/${list._id}/${list.listName.replace(" ", "%20")}`
-  const listLink = encodeURI(`${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName}/${list._id}/${list.listName}`)
+  const [listNameEditState, setListNameEditState] = useState(list.listName);
+  const listLink = encodeURI(
+    `${process.env.REACT_APP_DOMAIN}/list/join/${currentUser._id}/${currentUser.fullName}/${list._id}/${list.listName}`
+  );
 
   useEffect(() => {
     const fetchSubscribedUsersData = () => {
@@ -50,10 +52,14 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
 
   const handleShareLink = e => {
     e.preventDefault();
-    console.log("listname: ", list.listName)
+    console.log("listname: ", list.listName);
 
     axios
-      .post("/api/shareListViaEmail", { emailTo: emailState, listLink, listName:list.listName })
+      .post("/api/shareListViaEmail", {
+        emailTo: emailState,
+        listLink,
+        listName: list.listName
+      })
       .then(() => {
         toggleShowShare();
       })
@@ -136,10 +142,30 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
     setCopyBtnState("Link copied!");
   };
 
+  const onListNameEditChange = e => {
+    setListNameEditState(e.target.value);
+  };
+
+  const handleChangeListName = () => {
+    axios
+      .post("/api/changeListName", {
+        listId: list._id,
+        newListName: listNameEditState
+      })
+      .then(response => {
+        console.log("list name changed to: ", response.data.newListName);
+        toggleShowShare();
+      })
+      .catch(error => {
+        console.log("error in handleChangeListName: ", error);
+        window.alert("unable to change list name");
+      });
+  };
+
   return (
     <div className="list-settings-wrapper">
-      <fieldset className="settings-fieldset settings-danger-fieldset">
-        <legend className="w-auto settings-legend">Danger Zone</legend>
+      <fieldset className="settings-fieldset settings-general-fieldset">
+        <legend className="w-auto settings-legend">General</legend>
         <div className="settings-danger-wrapper">
           <button
             className="settings-danger-btns"
@@ -153,6 +179,29 @@ const ListSettingsAndShare = ({ toggleShowShare, list, history }) => {
             </button>
           )}
         </div>
+        <form onSubmit={handleChangeListName}>
+          <fieldset className="settings-general-edit-fieldset">
+            <legend className="w-auto settings-edit-title-legend">
+              Edit list name
+            </legend>
+            <div className="settings-edit-form-wrapper">
+              <input
+                className="settings-general-new-list-name-input"
+                required
+                type="text"
+                name="listName"
+                value={listNameEditState}
+                onChange={onListNameEditChange}
+              />
+              <button
+                type="submit"
+                className="settings-general-change-name-btn"
+              >
+                <i className="fas fa-edit settings-general-change-name-btn-icon"></i>
+              </button>
+            </div>
+          </fieldset>
+        </form>
       </fieldset>
       <fieldset className="settings-fieldset settings-share-fieldset">
         <legend className="w-auto settings-legend">Share</legend>

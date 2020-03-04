@@ -240,4 +240,17 @@ module.exports = app => {
         res.status(400).send({ error: "unable to get user full name by id" });
       });
   });
+
+  //POST// changeListName
+  app.post("/api/changeListName", requireLogin, (req, res) => {
+    const { listId, newListName } = req.body;
+    List.findByIdAndUpdate(listId, { listName: newListName })
+      .then(list => {
+        res.status(204).send({ newListName: list.listName });
+      })
+      .catch(error => {
+        console.log("error in changeListName: ", error);
+        res.status(400).send({ error: "unable to change list name" });
+      });
+  });
 };
